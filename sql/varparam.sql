@@ -16,4 +16,29 @@ do language plv8 $$
    plv8.elog(INFO, JSON.stringify(plv8.execute("SELECT $1", 1)));
    plv8.elog(INFO, JSON.stringify(plv8.execute("SELECT $1", [1])));
    plv8.elog(INFO, JSON.stringify(plv8.execute("SELECT $1 a, $2 b", 1, 2)));
+
+   var plan = plv8.prepare("SELECT $1 a, $2 b")
+
+   plv8.elog(INFO, JSON.stringify(plan.execute(1, 2)));
+   plv8.elog(INFO, JSON.stringify(plan.execute([1, 2])));
+$$;
+
+-- Negative cases that trigger errors.
+
+do language plv8 $$
+   plv8.execute("SELECT $1 a, $2 b", 1, 2, 3);
+$$;
+
+do language plv8 $$
+   plv8.execute("SELECT $1 a, $2 b", [1, 2, 3]);
+$$;
+
+do language plv8 $$
+   var plan = plv8.prepare("SELECT $1 a, $2 b")
+   plan.execute([1, 2, 3]);
+$$;
+
+do language plv8 $$
+   var plan = plv8.prepare("SELECT $1 a, $2 b");
+   plan.execute(1, 2, 3);
 $$;

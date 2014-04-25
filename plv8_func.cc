@@ -400,7 +400,7 @@ plv8_execute_params(const char *sql, Handle<Array> params)
 	plan = SPI_prepare_params(sql, plv8_variable_param_setup,
 							  &parstate, 0);
 	if (parstate.numParams != nparam)
-		elog(ERROR, "parameter numbers mismatch: %d != %d",
+		elog(ERROR, "query expected %d argument(s), given is %d",
 				parstate.numParams, nparam);
 	for (int i = 0; i < nparam; i++)
 	{
